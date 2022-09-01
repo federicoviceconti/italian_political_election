@@ -1,0 +1,32 @@
+name: italian_political_election
+description: Political parties for the italian election (25 Sept 22)
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_hooks: ^0.18.0
+  hooks_riverpod: ^2.0.0-dev.9
+  json_annotation: ^4.6.0
+  http: ^0.13.5
+  pdfx: ^2.2.0
+  permission_handler: ^10.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  freezed_annotation: ^2.1.0
+  build_runner: ^2.2.0
+  freezed: ^2.1.0+1
+  json_serializable: ^6.3.1
+
+flutter:
+  uses-material-design: true
