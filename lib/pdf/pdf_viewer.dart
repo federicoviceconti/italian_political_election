@@ -6,8 +6,6 @@ import '../core/base_widget.dart';
 import '../election/model/pdf_param_download.dart';
 import 'pdf_notifier.dart';
 
-
-
 class PdfViewerView extends HookConsumerWidget {
   final PdfParamDownload param;
 

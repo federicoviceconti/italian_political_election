@@ -4,7 +4,6 @@ import 'package:italian_political_election/election/model/candidate.dart';
 import 'package:italian_political_election/election/model/doc_file.dart';
 import 'package:italian_political_election/election/model/pdf_param_download.dart';
 import 'package:italian_political_election/pdf/pdf_viewer.dart';
-import 'package:pdfx/pdfx.dart';
 
 import '../core/base_widget.dart';
 import '../election/model/metadata_parties.dart';

@@ -30,7 +30,7 @@ enum DocType {
 
 extension DocTypeExtension on DocType {
   String get docName {
-    switch(this) {
+    switch (this) {
       case DocType.statute:
         return 'Statuto';
       case DocType.program:

@@ -33,7 +33,7 @@ extension PoliticalPartyExtension on PoliticalParty {
   }
 
   String get leader {
-    if(nomeC.contains('capo') && cognC.contains('forza politica')) {
+    if (nomeC.contains('capo') && cognC.contains('forza politica')) {
       return '';
     }
 
