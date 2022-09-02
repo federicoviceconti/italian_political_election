@@ -135,54 +135,56 @@ class PoliticalItemRowWidget extends StatelessWidget {
                 blurRadius: 4)
           ],
           borderRadius: const BorderRadius.all(Radius.circular(8.0))),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          Image.network(party.logoSrc),
-          const SizedBox(width: 16.0),
-          Expanded(
+          Row(
+            children: [
+              Image.network(party.logoSrc),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      party.partito,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                    ),
+                    Visibility(
+                      visible: party.leader.isNotEmpty,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8.0),
+                          LeaderTextWidget(party.leader),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: party.eRappr.isNotEmpty,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8.0),
+                          PrincipalTextWidget(party.eRappr),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          Visibility(
+            visible: party.eFile.isNotEmpty,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  party.partito,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                ),
-                Visibility(
-                  visible: party.leader.isNotEmpty,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 8.0),
-                      LeaderTextWidget(party.leader),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: party.eRappr.isNotEmpty,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 8.0),
-                      PrincipalTextWidget(party.eRappr),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: party.eFile.isNotEmpty,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 8.0),
-                      PartyFileWidget(party.nOrd, party.eFile),
-                    ],
-                  ),
-                ),
+                const SizedBox(height: 16.0),
+                PartyFileWidget(party.nOrd, party.eFile),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -249,7 +251,7 @@ class LeaderTextWidget extends StatelessWidget {
   }
 }
 
-class PartyFileWidget extends StatelessWidget {
+class PartyFileWidget extends StatefulWidget {
   final List<DocFile> eFile;
 
   final int nOrd;
@@ -257,43 +259,58 @@ class PartyFileWidget extends StatelessWidget {
   const PartyFileWidget(this.nOrd, this.eFile, {Key? key}) : super(key: key);
 
   @override
+  State<PartyFileWidget> createState() => _PartyFileWidgetState();
+}
+
+class _PartyFileWidgetState extends State<PartyFileWidget> {
+  bool opened = false;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: const [
-            Text('Documenti'),
-            SizedBox(
-              width: 15,
-              height: 15,
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Icon(Icons.arrow_forward_ios_sharp),
+        GestureDetector(
+          onTap: () => setState(() {
+            opened = !opened;
+          }),
+          child: Row(
+            children: const [
+              Text('Documenti'),
+              SizedBox(
+                width: 15,
+                height: 15,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Icon(Icons.arrow_forward_ios_sharp),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: eFile.length,
-            itemBuilder: (context, index) => PartyFileItemWidget(
-              eFile[index],
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => PdfViewerView(
-                      param: PdfParamDownload(
-                        desc: eFile[index].descRp,
-                        path: eFile[index].fDoc,
-                        num: nOrd,
+        Visibility(
+          visible: opened,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.eFile.length,
+              itemBuilder: (context, index) => PartyFileItemWidget(
+                widget.eFile[index],
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PdfViewerView(
+                        param: PdfParamDownload(
+                          desc: widget.eFile[index].descRp,
+                          path: widget.eFile[index].fDoc,
+                          num: widget.nOrd,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
