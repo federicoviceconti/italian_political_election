@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../api/election_api.dart';
 import 'model/metadata_parties.dart';
 import 'election_service.dart';
 import 'model/pdf_param_download.dart';
@@ -28,7 +29,13 @@ class _ElectionRepositoryImpl extends ElectionRepository {
   }
 }
 
-final electionService = Provider<ElectionService>((ref) => ElectionService());
+final api = Provider<ElectionApi>((ref) => ElectionApi.create());
+
+final electionService = Provider<ElectionService>(
+  (ref) => ElectionService(
+    ref.watch<ElectionApi>(api),
+  ),
+);
 
 final electionRepositoryProvider = Provider<ElectionRepository>(
   (ref) => _ElectionRepositoryImpl(ref.watch(electionService)),

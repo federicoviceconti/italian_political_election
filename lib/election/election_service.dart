@@ -1,46 +1,30 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:http/http.dart' as http;
-import 'package:italian_political_election/election/model/doc_file.dart';
-
+import '../api/election_api.dart';
 import 'model/metadata_parties.dart';
 import 'model/pdf_param_download.dart';
 
 class ElectionService {
-  static const String baseUrl = 'https://dait.interno.gov.it';
+  final ElectionApi api;
 
-  static const directory = 'POLITICHE_20220925';
+  ElectionService(this.api);
 
   static const imagePath =
-      '$baseUrl/documenti/trasparenza/$directory/Contrassegni/Accettato/Piccolo';
+      '$electionBaseUrl/documenti/trasparenza/$electionDirectory/Contrassegni/Accettato/Piccolo';
 
   Future<MetadataParties?> getMetadataParties() async {
-    const path = '/documenti/trasparenza/$directory/$directory.json';
-    const fullPath = '$baseUrl$path';
-    final result = await http.get(
-      Uri.parse(fullPath),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
+    final result = await api.getParties();
 
-    final map = jsonDecode(result.body);
-
-    if (map != null) {
-      return MetadataParties.fromJson(jsonDecode(result.body));
+    if (result.isSuccessful) {
+      return MetadataParties.fromJson(result.body);
     }
 
     return null;
   }
 
   Future<Uint8List> downloadPdf(PdfParamDownload file) async {
-    final fullPath =
-        '$baseUrl/documenti/trasparenza/$directory/Documenti/${file.num}/${file.path}';
-
-    final result = await http.get(
-      Uri.parse(fullPath),
-    );
+    final result = await api.downloadPdf(file.num, file.path);
 
     return result.bodyBytes;
   }
